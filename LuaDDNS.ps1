@@ -474,7 +474,7 @@ $TTL = 600
 
 #Get actual addresses
 $ExternalIPv4 = (Invoke-WebRequest -uri "https://api.ipify.org/" -UseBasicParsing).Content
-$InterfaceIpv6s = @(Get-NetIPAddress | Where-Object {$_.AddressFamily -like "IPv6" -AND $_.PrefixOrigin -eq "RouterAdvertisement"} | Select-Object -ExpandProperty IPAddress)
+$InterfaceIpv6s = @(Get-NetIPAddress | Where-Object {$_.AddressFamily -like "IPv6" -AND $_.PrefixOrigin -eq "RouterAdvertisement" -AND $_.SuffixOrigin -eq "Link"} | Select-Object -ExpandProperty IPAddress)
 
 #Get DNS entries from zone via API
 $DnsRecordLists = @(Get-LuaDnsZone -ZoneName $DnsZone -LuaCredential $LuaCredential)
@@ -508,9 +508,6 @@ If($DnsRecord){
 } else {
     Add-LuaDnsRecord -RecordName $HostFqdn -RecordValue $ExternalIPv4 -RecordType A -RecordTTL $TTL -LuaCredential $LuaCredential -Verbose
 }
-
-
-
 
 
 # Work on ipv6 entries
